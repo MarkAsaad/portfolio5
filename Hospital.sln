@@ -1,28 +1,354 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hospital", "Hospital\Hospital.vcxproj", "{9DE03A36-7612-45B6-817A-E0B3729550CE}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9DE03A36-7612-45B6-817A-E0B3729550CE}.Debug|x64.ActiveCfg = Debug|x64
-		{9DE03A36-7612-45B6-817A-E0B3729550CE}.Debug|x64.Build.0 = Debug|x64
-		{9DE03A36-7612-45B6-817A-E0B3729550CE}.Debug|x86.ActiveCfg = Debug|Win32
-		{9DE03A36-7612-45B6-817A-E0B3729550CE}.Debug|x86.Build.0 = Debug|Win32
-		{9DE03A36-7612-45B6-817A-E0B3729550CE}.Release|x64.ActiveCfg = Release|x64
-		{9DE03A36-7612-45B6-817A-E0B3729550CE}.Release|x64.Build.0 = Release|x64
-		{9DE03A36-7612-45B6-817A-E0B3729550CE}.Release|x86.ActiveCfg = Release|Win32
-		{9DE03A36-7612-45B6-817A-E0B3729550CE}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-EndGlobal
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Hospital
+{
+private:
+    struct HospitalNode
+    {
+        int id;
+        string name;
+        string location;
+        HospitalNode* next;
+    };
+    HospitalNode* head;
+
+public:
+    Hospital()
+    {
+        head = NULL;
+    }
+
+    void addHospital()
+    {
+        HospitalNode* newHospital = new HospitalNode();
+        cout << "Enter Hospital ID: ";
+        cin >> newHospital->id;
+        cout << "Enter Hospital Name: ";
+        cin >> newHospital->name;
+        cout << "Enter Hospital Location: ";
+        cin >> newHospital->location;
+        newHospital->next = head;
+        head = newHospital;
+        cout << "Hospital branch added successfully!\n";
+    }
+
+    void displayHospitals()
+    {
+        HospitalNode* temp = head;
+        cout << "\n--- Hospital Branches ---\n";
+        while (temp != NULL)
+        {
+            cout << "ID: " << temp->id
+                << ", Name: " << temp->name
+                << ", Location: " << temp->location << endl;
+            temp = temp->next;
+        }
+    }
+
+    void searchHospitalByID()
+    {
+        int id;
+        cout << "Enter Hospital ID to search: ";
+        cin >> id;
+        HospitalNode* temp = head;
+        while (temp != NULL)
+        {
+            if (temp->id == id)
+            {
+                cout << "Hospital Found: Name: " << temp->name
+                    << ", Location: " << temp->location << endl;
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << "Hospital with ID " << id << " not found.\n";
+    }
+
+    void removeHospitalBranch()
+    {
+        int id;
+        cout << "Enter Hospital ID to remove: ";
+        cin >> id;
+        HospitalNode* temp = head;
+        HospitalNode* prev = NULL;
+
+        while (temp != NULL)
+        {
+            if (temp->id == id)
+            {
+                if (prev == NULL)
+                {
+                    head = temp->next;
+                }
+                else
+                {
+                    prev->next = temp->next;
+                }
+                delete temp;
+                cout << "Hospital branch removed successfully.\n";
+                return;
+            }
+            prev = temp;
+            temp = temp->next;
+        }
+        cout << "Hospital branch with ID " << id << " not found.\n";
+    }
+};
+
+class Doctor
+{
+private:
+    struct DoctorNode
+    {
+        int id;
+        string name;
+        string specialization;
+        string hospitalBranch;
+        DoctorNode* next;
+    };
+    DoctorNode* head;
+
+public:
+    Doctor()
+    {
+        head = NULL;
+    }
+
+    void addDoctor()
+    {
+        DoctorNode* newDoctor = new DoctorNode();
+        cout << "Enter Doctor ID: ";
+        cin >> newDoctor->id;
+        cout << "Enter Doctor Name: ";
+        cin >> newDoctor->name;
+        cout << "Enter Specialization: ";
+        cin >> newDoctor->specialization;
+        cout << "Enter Hospital Branch Name: ";
+        cin >> newDoctor->hospitalBranch;
+        newDoctor->next = head;
+        head = newDoctor;
+        cout << "Doctor added successfully!\n";
+    }
+
+    void displayDoctors()
+    {
+        DoctorNode* temp = head;
+        cout << "\n--- Doctors List ---\n";
+        while (temp != NULL)
+        {
+            cout << "ID: " << temp->id
+                << ", Name: " << temp->name
+                << ", Specialization: " << temp->specialization
+                << ", Hospital Branch: " << temp->hospitalBranch << endl;
+            temp = temp->next;
+        }
+    }
+
+    void removeDoctor()
+    {
+        int id;
+        cout << "Enter Doctor ID to remove: ";
+        cin >> id;
+        DoctorNode* temp = head;
+        DoctorNode* prev = NULL;
+
+        while (temp != NULL)
+        {
+            if (temp->id == id)
+            {
+                if (prev == NULL)
+                {
+                    head = temp->next;
+                }
+                else
+                {
+                    prev->next = temp->next;
+                }
+
+                delete temp;
+                cout << "Doctor removed successfully.\n";
+                return;
+            }
+            prev = temp;
+            temp = temp->next;
+        }
+        cout << "Doctor with ID " << id << " not found.\n";
+    }
+};
+
+class Patient
+{
+private:
+    struct PatientNode
+    {
+        int id;
+        string name;
+        string address;
+        string appointment;
+        PatientNode* next;
+    };
+    PatientNode* head;
+
+public:
+    Patient()
+    {
+        head = NULL;
+    }
+
+    void addPatient()
+    {
+        PatientNode* newPatient = new PatientNode();
+        cout << "Enter Patient ID: ";
+        cin >> newPatient->id;
+        cout << "Enter Patient Name: ";
+        cin >> newPatient->name;
+        cout << "Enter Patient Address: ";
+        cin >> newPatient->address;
+        newPatient->appointment = "No Appointment";
+        newPatient->next = head;
+        head = newPatient;
+        cout << "Patient added successfully!\n";
+    }
+
+    void removePatient()
+    {
+        int id;
+        cout << "Enter Patient ID to remove: ";
+        cin >> id;
+        PatientNode* temp = head;
+        PatientNode* prev = NULL;
+
+        while (temp != NULL)
+        {
+            if (temp->id == id)
+            {
+                if (prev == NULL)
+                {
+                    head = temp->next;
+                }
+                else
+                {
+                    prev->next = temp->next;
+                }
+                delete temp;
+                cout << "Patient removed successfully.\n";
+                return;
+            }
+            prev = temp;
+            temp = temp->next;
+        }
+        cout << "Patient with ID " << id << " not found.\n";
+    }
+
+    void bookAppointment()
+    {
+        int id;
+        cout << "Enter Patient ID to book appointment: ";
+        cin >> id;
+
+        PatientNode* temp = head;
+        while (temp != NULL)
+        {
+            if (temp->id == id)
+            {
+                cout << "Enter Appointment Date: ";
+                cin >> temp->appointment;
+                cout << "Appointment booked successfully for " << temp->name << "!\n";
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << "Patient with ID " << id << " not found.\n";
+    }
+
+    void searchPatientByName()
+    {
+        string name;
+        cout << "Enter Patient Name to search: ";
+        cin >> name;
+        PatientNode* temp = head;
+        while (temp != NULL)
+        {
+            if (temp->name == name)
+            {
+                cout << "Patient Found: ID: " << temp->id
+                    << ", Address: " << temp->address
+                    << ", Appointment: " << temp->appointment << endl;
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << "Patient with name " << name << " not found.\n";
+    }
+
+    void updatePatientInfo()
+    {
+        int id;
+        cout << "Enter Patient ID to update: ";
+        cin >> id;
+
+        PatientNode* temp = head;
+        while (temp != NULL)
+        {
+            if (temp->id == id)
+            {
+                cout << "Enter new name for Patient: ";
+                cin >> temp->name;
+                cout << "Enter new address for Patient: ";
+                cin >> temp->address;
+                cout << "Patient information updated successfully.\n";
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << "Patient with ID " << id << " not found.\n";
+    }
+};
+
+int main()
+{
+    Hospital hospitalSystem;
+    Doctor doctorSystem;
+    Patient patientSystem;
+
+    int choice;
+    while (true)
+    {
+        cout << "\n--- Hospital Management System ---\n";
+        cout << "1. Add Hospital Branch\n";
+        cout << "2. Display Hospitals\n";
+        cout << "3. Search Hospital by ID\n";
+        cout << "4. Remove Hospital Branch\n";
+        cout << "5. Add Doctor\n";
+        cout << "6. Display Doctors\n";
+        cout << "7. Remove Doctor\n";
+        cout << "8. Add Patient\n";
+        cout << "9. Remove Patient\n";
+        cout << "10.Book Appointment\n";
+        cout << "11.Search for Patient by Name\n";
+        cout << "12.Update Patient Information\n";
+        cout << "13.Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1: hospitalSystem.addHospital(); break;
+        case 2: hospitalSystem.displayHospitals(); break;
+        case 3: hospitalSystem.searchHospitalByID(); break;
+        case 4: hospitalSystem.removeHospitalBranch(); break;
+        case 5: doctorSystem.addDoctor(); break;
+        case 6: doctorSystem.displayDoctors(); break;
+        case 7: doctorSystem.removeDoctor(); break;
+        case 8: patientSystem.addPatient(); break;
+        case 9: patientSystem.removePatient(); break;
+        case 10:patientSystem.bookAppointment(); break;
+        case 11:patientSystem.searchPatientByName(); break;
+        case 12:patientSystem.updatePatientInfo(); break;
+        case 13: cout << "Exiting...\n"; return 0;
+        default: cout << "Invalid choice. Try again.\n";
+        }
+    }
+}
